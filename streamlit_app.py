@@ -48,11 +48,20 @@ data = {
 
 api_version = st.selectbox('API Version', ['v1', 'v2'])
 
+# Add option for required features only if v2 is selected
+use_required_features = False
+if api_version == 'v2':
+    use_required_features = st.checkbox('Use only required features')
+
 # Button to make prediction
 if st.button('Predict'):
-    response = requests.post(f'http://flask_api_{api_version}:5003/{api_version}/predict', json=data)
+    endpoint = f'/{api_version}/{"predict_required" if use_required_features else "predict"}'
+    response = requests.post(f'http://flask_api_{api_version}:5003{endpoint}', json=data)
     if response.status_code == 200:
-        prediction = response.json()['prediction']
+        result = response.json()
+        prediction = result['prediction']
         st.success(f'The predicted price is ${prediction:,.2f}')
+        if 'features_used' in result:
+            st.info(f'Features used: {", ".join(result["features_used"])}')
     else:
         st.error('Error: Could not get prediction')

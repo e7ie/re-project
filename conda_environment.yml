@@ -13,3 +13,4 @@ dependencies:
 - requests=2.28.1
 - mlflow
 - requests
+- flask-cors

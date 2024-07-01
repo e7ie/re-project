@@ -7,9 +7,7 @@ import os
 import logging
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
-
-# Set up logging
+CORS(app)  
 logging.basicConfig(level=logging.INFO)
 
 # Determine the root directory of the project
@@ -37,7 +35,7 @@ def prepare_data(input_data):
 
 @app.route('/', methods=['GET'])
 def home():
-    return "Flask server is running!"
+    return "Flask server is running. Let's predict house prices!"
 
 @app.route('/predict', methods=['POST'])
 def predict():
