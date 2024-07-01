@@ -50,7 +50,7 @@ api_version = st.selectbox('API Version', ['v1', 'v2'])
 
 # Button to make prediction
 if st.button('Predict'):
-    response = requests.post(f'http://127.0.0.1:5003/{api_version}/predict', json=data)
+    response = requests.post(f'http://flask_api_{api_version}:5003/{api_version}/predict', json=data)
     if response.status_code == 200:
         prediction = response.json()['prediction']
         st.success(f'The predicted price is ${prediction:,.2f}')

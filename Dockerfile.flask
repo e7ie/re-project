@@ -1,0 +1,15 @@
+FROM continuumio/miniconda3:latest
+
+WORKDIR /app
+
+COPY conda_environment.yml .
+RUN conda env create -f conda_environment.yml
+RUN conda install -c conda-forge flask-cors
+
+COPY . /app
+
+ENV PYTHONPATH=/app
+
+SHELL ["/bin/bash", "-c"]
+CMD source activate housing && \
+    flask run --host=0.0.0.0 --port=5003

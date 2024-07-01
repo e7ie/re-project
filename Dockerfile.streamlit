@@ -1,13 +1,26 @@
-FROM python:3.9-slim
+# Use the official Miniconda3 image as the base image
+FROM continuumio/miniconda3:latest
 
+# Set the working directory in the container
 WORKDIR /app
 
+# Copy the conda environment file into the container
 COPY conda_environment.yml .
 
-RUN pip install --no-cache-dir -r conda_environment.yml
+# Create the environment from the conda environment file
+RUN conda env create -f conda_environment.yml
 
+# Activate the environment, and make sure it's activated in any subsequent commands
+SHELL ["conda", "run", "-n", "housing", "/bin/bash", "-c"]
+
+# Install Streamlit separately to avoid conflicts
+RUN conda install -c conda-forge streamlit
+
+# Copy the rest of the application code into the container
 COPY . .
 
+# Expose the port that the Streamlit app runs on
 EXPOSE 8501
 
-CMD ["streamlit", "run", "streamlit_app.py"]
+# Command to run the Streamlit app
+CMD ["conda", "run", "-n", "housing", "streamlit", "run", "streamlit_app.py"]

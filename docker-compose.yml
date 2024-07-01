@@ -4,20 +4,32 @@ services:
   flask_api_v1:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.flask
     ports:
-      - "5003:5003"  # Host port 5003 mapped to container port 5003
+      - "5005:5003"
     environment:
-      - FLASK_APP=app/api/v1/main.py
+      - FLASK_APP=api.v1.main
+    networks:
+      - app_network
+    volumes:
+      - ./api:/app/api
+      - ./model:/app/model
+      - ./data:/app/data
 
   flask_api_v2:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.flask
     ports:
-      - "5004:5003"  # Host port 5004 mapped to container port 5003
+      - "5006:5003"
     environment:
-      - FLASK_APP=app/api/v2/main.py
+      - FLASK_APP=api.v2.main
+    networks:
+      - app_network
+    volumes:
+      - ./api:/app/api
+      - ./model:/app/model
+      - ./data:/app/data
 
   streamlit_app:
     build:
@@ -25,3 +37,11 @@ services:
       dockerfile: Dockerfile.streamlit
     ports:
       - "8501:8501"
+    networks:
+      - app_network
+    volumes:
+      - ./streamlit_app.py:/app/streamlit_app.py
+
+networks:
+  app_network:
+    driver: bridge
