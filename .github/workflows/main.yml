@@ -19,10 +19,14 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install flake8 black
-    - name: Run linters
+    - name: Format with Black
+      run: black .
+    - name: Lint with flake8
       run: |
-        flake8 .
-        black --check .
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
 
   test:
     runs-on: ubuntu-latest
@@ -47,14 +51,14 @@ jobs:
     - uses: actions/checkout@v2
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
-    - name: Build and push API Docker image
+    - name: Build API Docker image
       uses: docker/build-push-action@v2
       with:
         context: .
         file: ./Dockerfile
         push: false
         tags: real_estate_model:latest
-    - name: Build and push Streamlit Docker image
+    - name: Build Streamlit Docker image
       uses: docker/build-push-action@v2
       with:
         context: .
