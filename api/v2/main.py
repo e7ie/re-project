@@ -67,6 +67,7 @@ def predict():
         logging.error(f"Prediction error: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
+#BONUS
 @app.route('/v2/predict_basic', methods=['POST'])
 def predict_basic():
     """BONUS: Endpoint for making predictions using only the basic features."""
