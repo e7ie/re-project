@@ -10,7 +10,6 @@ app = Flask(__name__)
 CORS(app)  
 logging.basicConfig(level=logging.INFO)
 
-# Determine the root directory of the project
 root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 model_dir = os.path.join(root_dir, 'model', 'v1')
 data_dir = os.path.join(root_dir, 'data')
@@ -21,7 +20,7 @@ try:
     with open(os.path.join(model_dir, 'model_features.json'), 'r') as features_file:
         model_features = json.load(features_file)
     
-    # Load demographic data
+    # Loading demographic data
     demographics_df = pd.read_csv(os.path.join(data_dir, 'zipcode_demographics.csv'), dtype={'zipcode': str})
 except Exception as e:
     logging.error(f"Error loading model or data: {str(e)}")
@@ -37,7 +36,12 @@ def prepare_data(input_data):
 def home():
     return "Flask server is running. Let's predict house prices!"
 
-@app.route('/predict', methods=['POST'])
+#testing that endpoint is working
+@app.route('/v1/', methods=['GET'])
+def v1_home():
+    return "V1 API is running. Let's predict house prices!"
+
+@app.route('/v1/predict', methods=['POST'])
 def predict():
     """Endpoint for making predictions."""
     try:
